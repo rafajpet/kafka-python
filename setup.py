@@ -31,6 +31,9 @@ here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, 'README.rst')) as f:
     README = f.read()
 
+with open(os.path.join(here, 'LICENSE')) as f:
+    LICENSE = f.read()
+
 setup(
     name="kafka-python",
     tests_require=test_require,
@@ -46,7 +49,7 @@ setup(
     url="https://github.com/dpkp/kafka-python",
     license="Apache License 2.0",
     description="Pure Python client for Apache Kafka",
-    license_files='MIT',
+    license_files=LICENSE,
     long_description=README,
     keywords="apache kafka",
     classifiers=[
