@@ -233,6 +233,7 @@ class BrokerConnection(object):
         'sasl_kerberos_domain_name': None,
         'sasl_oauth_token_provider': None,
         'aws_msk_assume_role_arn': None,
+        'aws_msk_region': None,
     }
     SECURITY_PROTOCOLS = ('PLAINTEXT', 'SSL', 'SASL_PLAINTEXT', 'SASL_SSL')
     SASL_MECHANISMS = ('PLAIN', 'GSSAPI', 'OAUTHBEARER', "SCRAM-SHA-256", "SCRAM-SHA-512", 'AWS_MSK_IAM')
@@ -687,7 +688,7 @@ class BrokerConnection(object):
                 host=self.host,
                 access_key=credentials['AccessKeyId'],
                 secret_key=credentials['SecretAccessKey'],
-                region=session.get_config_variable('region'),
+                region=self.config['aws_msk_region'],
                 token=credentials['SessionToken'],
             )
         else:
@@ -696,7 +697,7 @@ class BrokerConnection(object):
                 host=self.host,
                 access_key=credentials.access_key,
                 secret_key=credentials.secret_key,
-                region=session.get_config_variable('region'),
+                region=self.config['aws_msk_region'],
                 token=credentials.token,
             )
 
