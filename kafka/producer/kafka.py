@@ -334,6 +334,7 @@ class KafkaProducer(object):
         'sasl_kerberos_service_name': 'kafka',
         'sasl_kerberos_domain_name': None,
         'sasl_oauth_token_provider': None,
+        'aws_msk_assume_role_arn': None,
         'kafka_client': KafkaClient,
     }
 
