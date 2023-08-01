@@ -192,7 +192,8 @@ class KafkaClient(object):
         'sasl_plain_password': None,
         'sasl_kerberos_service_name': 'kafka',
         'sasl_kerberos_domain_name': None,
-        'sasl_oauth_token_provider': None
+        'sasl_oauth_token_provider': None,
+        'aws_msk_assume_role_arn': None,
     }
 
     def __init__(self, **configs):

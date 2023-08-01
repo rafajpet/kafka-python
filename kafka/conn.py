@@ -676,7 +676,7 @@ class BrokerConnection(object):
 
     def _try_authenticate_aws_msk_iam(self, future):
         session = BotoSession()
-        if self.config['aws_msk_assume_role_arn'] is None:
+        if self.config['aws_msk_assume_role_arn'] is not None:
             sts = session.client("sts")
             response = sts.assume_role(
                 RoleArn=self.config['aws_msk_assume_role_arn'],
