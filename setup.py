@@ -45,7 +45,6 @@ setup(
     author="Dana Powers",
     author_email="dana.powers@gmail.com",
     url="https://github.com/dpkp/kafka-python",
-    license="Apache License 2.0",
     description="Pure Python client for Apache Kafka",
     long_description=README,
     keywords="apache kafka",
