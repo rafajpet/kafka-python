@@ -33,8 +33,6 @@ with open(os.path.join(here, 'README.rst')) as f:
 
 setup(
     name="kafka-python",
-    version=__version__,
-
     tests_require=test_require,
     extras_require={
         "crc32c": ["crc32c"],
