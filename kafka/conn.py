@@ -86,7 +86,7 @@ except ImportError:
 
 # needed for AWS_MSK_IAM authentication:
 try:
-    from botocore.session import Session as BotoSession
+    from boto3.session import Session as BotoSession
 except ImportError:
     # no botocore available, will disable AWS_MSK_IAM mechanism
     BotoSession = None
@@ -231,7 +231,8 @@ class BrokerConnection(object):
         'sasl_plain_password': None,
         'sasl_kerberos_service_name': 'kafka',
         'sasl_kerberos_domain_name': None,
-        'sasl_oauth_token_provider': None
+        'sasl_oauth_token_provider': None,
+        'aws_msk_assume_role_arn': None,
     }
     SECURITY_PROTOCOLS = ('PLAINTEXT', 'SSL', 'SASL_PLAINTEXT', 'SASL_SSL')
     SASL_MECHANISMS = ('PLAIN', 'GSSAPI', 'OAUTHBEARER', "SCRAM-SHA-256", "SCRAM-SHA-512", 'AWS_MSK_IAM')
@@ -675,14 +676,29 @@ class BrokerConnection(object):
 
     def _try_authenticate_aws_msk_iam(self, future):
         session = BotoSession()
-        credentials = session.get_credentials().get_frozen_credentials()
-        client = AwsMskIamClient(
-            host=self.host,
-            access_key=credentials.access_key,
-            secret_key=credentials.secret_key,
-            region=session.get_config_variable('region'),
-            token=credentials.token,
-        )
+        if self.config['aws_msk_assume_role_arn'] is None:
+            sts = session.client("sts")
+            response = sts.assume_role(
+                RoleArn=self.config['aws_msk_assume_role_arn'],
+                RoleSessionName="kafka-python-client"
+            )
+            credentials = response['Credentials']
+            client = AwsMskIamClient(
+                host=self.host,
+                access_key=credentials['AccessKeyId'],
+                secret_key=credentials['SecretAccessKey'],
+                region=session.get_config_variable('region'),
+                token=credentials['SessionToken'],
+            )
+        else:
+            credentials = session.get_credentials().get_frozen_credentials()
+            client = AwsMskIamClient(
+                host=self.host,
+                access_key=credentials.access_key,
+                secret_key=credentials.secret_key,
+                region=session.get_config_variable('region'),
+                token=credentials.token,
+            )
 
         msg = client.first_message()
         size = Int32.encode(len(msg))
