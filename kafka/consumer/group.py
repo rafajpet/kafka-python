@@ -306,6 +306,8 @@ class KafkaConsumer(six.Iterator):
         'sasl_kerberos_service_name': 'kafka',
         'sasl_kerberos_domain_name': None,
         'sasl_oauth_token_provider': None,
+        'aws_msk_assume_role_arn': None,
+        'aws_msk_region': None,
         'legacy_iterator': False, # enable to revert to < 1.4.7 iterator
         'kafka_client': KafkaClient,
     }

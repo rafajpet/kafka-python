@@ -2,6 +2,7 @@ import datetime
 import hashlib
 import hmac
 import json
+import logging
 import string
 
 from kafka.vendor.six.moves import urllib
@@ -11,6 +12,7 @@ class AwsMskIamClient:
     UNRESERVED_CHARS = string.ascii_letters + string.digits + '-._~'
 
     def __init__(self, host, access_key, secret_key, region, token=None):
+        self.log = logging.getLogger('kafka')
         """
         Arguments:
             host (str): The hostname of the broker.
@@ -180,5 +182,5 @@ class AwsMskIamClient:
         }
         if self.token:
             msg['x-amz-security-token'] = self.token
-
+        self.log.debug(f"AWS IAM message: {msg}")
         return json.dumps(msg, separators=(',', ':')).encode('utf-8')
